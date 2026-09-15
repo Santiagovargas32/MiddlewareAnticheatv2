@@ -305,8 +305,13 @@ versiones añadirán historial sobre esa base.
 
 ## Límites de esta entrega
 
-Admisión TPM, enrollment completo, Quote/IMA físico conjunto, política de
-mediciones y revocación siguen pendientes. ENet no está cifrado ni autentica la
+La continuación está ordenada en [próximos pasos](docs/next-steps.md). Esta rama
+incorpora un [servicio de admisión por conexión](docs/session-admission.md), con
+TLS mutuo, desafíos de un uso y permisos que caducan o se revocan. Su conexión
+con Godot está pendiente; no habilita todavía partidas protegidas.
+
+Aplicar admisión y revocación al FPS, enrollment completo, Quote/IMA físico
+conjunto y política de mediciones siguen pendientes. ENet no está cifrado ni autentica la
 plataforma; usar una LAN de ensayo controlada. Hay interpolación de snapshots,
 pero no predicción, reconciliación o lag compensation. Faltan campaña humana de
 falsos positivos, medidas de red prolongadas y validación física entre dos Fedora.

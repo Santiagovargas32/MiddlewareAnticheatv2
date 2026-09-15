@@ -14,6 +14,7 @@ Un bloqueo de entorno es fallo o BLOCKED, nunca una aprobación por omisión.
 | `python3 scripts/verificar-puente.py` | Dos trabajadores C Linux sobre TLS mutuo; identidad, framing, conservación y rechazo de origen Windows ficticio |
 | `python3 scripts/verificar-cli.py` | Ciclo de servicio, idempotencia, conflicto de puerto y estado antiguo |
 | `python3 scripts/verificar-windows.py` | Sólo cross-build PE con MinGW, hashes y DLLs; runtime Windows BLOCKED |
+| `python3 scripts/verificar-admision.py --inspector build-tpm/lab_quote_inspect` | Registro por sesión/conexión, roles TLS, replay, caducidad, PCR, revocación concurrente y CLI; firmas software sin TPM físico. Incluido en CTest con LAB_TPM=ON. |
 
 CTest incluye fixtures independientes y 2.560.000 llamadas acotadas al parser de
 payloads, con buffers de red desalineados y destinos nativos alineados. El test de

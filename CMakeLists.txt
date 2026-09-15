@@ -127,6 +127,10 @@ if(LAB_TPM)
     add_test(NAME ima_quote_offline COMMAND "${Python3_EXECUTABLE}"
       "${CMAKE_SOURCE_DIR}/scripts/verificar-ima-quote.py"
       --inspector $<TARGET_FILE:lab_quote_inspect> --replayer $<TARGET_FILE:lab_ima_replay>)
+    add_test(NAME session_admission COMMAND "${Python3_EXECUTABLE}"
+      "${CMAKE_SOURCE_DIR}/scripts/verificar-admision.py"
+      --inspector $<TARGET_FILE:lab_quote_inspect>)
+    set_tests_properties(session_admission PROPERTIES TIMEOUT 45)
     set_tests_properties(ima_quote_offline PROPERTIES TIMEOUT 30)
     set_tests_properties(attestation_offline PROPERTIES
       WORKING_DIRECTORY "${CMAKE_SOURCE_DIR}" TIMEOUT 30)

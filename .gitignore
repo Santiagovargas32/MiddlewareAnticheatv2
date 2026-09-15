@@ -1,0 +1,59 @@
+# Configuración local y credenciales.
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+
+# Compilación fuera de fuentes y artefactos accidentales.
+/build*/
+/CMakeCache.txt
+/CMakeFiles/
+/Makefile
+/CTestTestfile.cmake
+/cmake_install.cmake
+*.o
+*.a
+*.so
+*.exe
+/core
+/core.*
+
+# Resultados reproducibles y cachés locales.
+/results/
+__pycache__/
+*.pyc
+/.tmp/
+/tmp/
+
+# Imágenes y discos de máquinas virtuales.
+*.iso
+*.qcow2
+*.vhd
+*.vhdx
+*.vmdk
+
+# Godot import cache; retain source scenes and scripts.
+/game/.godot/
+
+# Continuidad y configuración privadas de este checkout (se conservan localmente).
+/.agent/
+/.agents/
+/.codex/
+/AGENTS.md
+/continuidad.json
+/progress.md
+/documentacion/
+
+# Credenciales y material de identidad de los experimentos: nunca al repositorio.
+*.crt
+*.cer
+*.p12
+*.pfx
+*.ctx
+*.tpm
+*.csr
+*.srl
+*.log
+*.tar.gz
+*.zip

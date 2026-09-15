@@ -1,0 +1,36 @@
+name: Validate v0.1 source
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  linux:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 20
+    steps:
+      - uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
+      - name: Native laboratory dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y ninja-build libssl-dev libtss2-dev tpm2-tools
+      - name: Pin and verify Godot
+        run: python3 tools/prepare_godot.py
+      - name: FPS, tools and public documentation
+        run: python3 tools/verify_release.py
+      - name: C11 Release and software TPM fixtures
+        run: |
+          cmake -S . -B build -G Ninja -DCMAKE_BUILD_TYPE=Release -DCMAKE_C_FLAGS=-Werror -DLAB_TPM=ON
+          cmake --build build --parallel 2
+          ctest --test-dir build --output-on-failure
+      - name: UDP, adapter and native resources
+        run: |
+          python3 scripts/verificar-integracion.py --direct
+          python3 scripts/verificar-integracion.py --via-adapter --sanitize
+          python3 scripts/verificar-capacidades.py
+          python3 scripts/verificar-puente.py
+          python3 scripts/verificar-cli.py
+      - name: Deliverable source archive
+        run: python3 tools/package_game.py --output results/MiddlewareAnticheatv2-v0.1.0.tar.gz

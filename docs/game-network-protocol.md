@@ -66,3 +66,10 @@ los eventos de alerta se guardan aparte en el mismo archivo. Sin rotación conti
 servidor observado. No se envía al servidor. El análisis compara etiquetas después
 de ejecutar el detector y excluye transiciones por incertidumbre de red. Un peer
 ID es seudónimo de sesión, no identidad permanente.
+
+## Diseño de integración propuesto
+
+La [ADR 0010](adr/0010-attestor-peer-binding.md) propone el vínculo attestor–peer,
+protección de todo el tráfico ENet, IPC y lifecycle. Su [matriz de aceptación](development/ma-010-validation.md)
+distingue pruebas existentes de E2E pendientes. Es una propuesta MA-010: no
+modifica el contrato/runtime vigente ni habilita protegido en esta revisión.

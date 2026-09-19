@@ -1,33 +1,36 @@
 # Roadmap por paquetes
 
-Base contrastada: `0c3dc77bd8e4aa12112e95d7bb7877620be89334`, igual a origin/main
-tras fetch al iniciar MA-000. Propuesta inicial de la guía de 16-09-2026, revalidada
-por lectura del código; no es certificación runtime. [Estado y evidencia](project-state.md).
-P0 bloquea el hito protegido, no implica vulnerabilidad explotable. S/M/L es
-complejidad relativa. Cada ID representa una rama/PR, no una issue ya creada.
+Base actual de planificación: `648ff3c06efbadd554cf199c05e16b0663c11af0`,
+origin/main actualizado al iniciar MA-010. MA-000 está integrado por ancestry Git;
+no se infiere una PR. La propuesta inicial de 16-09-2026 se contrastó con código,
+y MA-010 concreta admisión en la [ADR 0010](../adr/0010-attestor-peer-binding.md).
+[Estado y evidencia](project-state.md). P0 bloquea el hito protegido, no implica
+vulnerabilidad explotable. S/M/L es complejidad relativa, no duración.
 
-Único paquete activo: [MA-000](tasks/MA-000.md). Siguiente: [MA-010](tasks/MA-010.md)
-tras integración y encargo. Todos los demás están BACKLOG; no se implementan en
-esta entrega. READY requiere dependencias integradas y ficha revisada según el
-[workflow](workflow.md). Las ramas siguientes conservan los nombres propuestos;
-se revalidan al encargar cada paquete.
+Único paquete activo: [MA-010](tasks/MA-010.md), IN_REVIEW. Siguiente: MA-011 tras
+integrar MA-010 y recibir su encargo; no se implementó aquí. Los siguientes quedan
+BACKLOG. READY exige dependencias integradas y ficha según el [workflow](workflow.md).
+Los IDs representan paquetes/rama/PR previstos, no issues ya creadas.
 
 ## Preparación y P0 — Admisión
 
 | ID / rama | Dependencias | Aceptación principal | Tamaño / estado |
 | --- | --- | --- | --- |
-| MA-000 · `docs/ma-000-development-workflow` | Ninguna | Instrucciones públicas, workflow, roadmap, estado, plantillas y guías presentes en clone/paquete limpios; privados excluidos | M / IN_REVIEW |
-| MA-010 · `docs/ma-010-admission-design` | MA-000 | ADR de identidad/posesión, transporte/IPC, estados, renovación, presupuesto de revocación y pruebas negativas | M / BACKLOG |
-| MA-011 · `refactor/ma-011-admission-boundary` | MA-010 | Extraer sólo frontera necesaria; development equivalente y protegido rechazado | M / BACKLOG |
-| MA-012 · `feat/ma-012-authenticated-peer-binding` | MA-011 | Binding con peer real; certificado ajeno, sustitución, replay y reconexión; protegido cerrado hasta lifecycle | L / BACKLOG |
-| MA-013 · `feat/ma-013-admission-enforcement` | MA-012 | Permiso server-side para ready/spawn/intenciones; limpiar efectos pendientes; ausente/negado/expirado/servicio caído no concede juego | L / BACKLOG |
+| MA-000 · `docs/ma-000-development-workflow` | Ninguna | Instrucciones públicas, workflow, roadmap, estado, plantillas y guías presentes en clone/paquete limpios; privados excluidos | M / DONE |
+| MA-010 · `docs/ma-010-admission-design` | MA-000 | ADR de identidad/posesión, transporte/IPC, estados, renovación, presupuesto de revocación y pruebas negativas | M / IN_REVIEW |
+| MA-011 · `refactor/ma-011-admission-boundary` | MA-010 | Extraer frontera de permiso/transporte y contexto; development equivalente, protegido rechazado (ADR 0010) | M / BACKLOG |
+| MA-012 · `feat/ma-012-authenticated-peer-binding` | MA-011 | Túnel mTLS completo, IPC y binding con endpoint real; certificado ajeno, replay, reconexión y recursos; protegido cerrado | L / BACKLOG |
+| MA-013 · `feat/ma-013-admission-enforcement` | MA-012 | Barrera inicial, RPC protegido, guard/epoch para ready/spawn/intenciones y limpieza; fallo cerrado; sin apertura pública aún | L / BACKLOG |
 | MA-014 · `feat/ma-014-trust-lifecycle` | MA-013 | Renovación/suspensión/revocación, restart/timeout/instancia, límite absoluto; respuestas tardías descartadas y ventana medida; protegido sólo tras E2E | L / BACKLOG |
 | MA-015 · `test/ma-015-fedora-lan-attestation` | MA-014 | Dos Fedora físicos, identidad configurada, Quote/IMA según política y revocación en partida; aceptación física BLOCKED si falta hardware | M / BACKLOG |
 
 H1: protegido experimental con contrato comprobado en software; aceptación física
 separada. El registro mTLS de admisión ya existe: no rehacer PR #1. En la base,
 lease 30 s, desafío 10 s y binding absoluto 300 s; renovar suspende el permiso y
-no hay push de revocación. Resolverlos explícitamente en MA-010/014. Si L es
+no hay push de revocación. ADR 0010 propone renovación suspendida con barrera
+CHALLENGED, rollover a 270 s
+y frescura local de 750 ms con objetivo de retirada ≤800 ms; implementación y
+medición pendientes en MA-014. No son resultados runtime. Si L es
 demasiado amplio, subdividir con nuevos IDs antes de implementar.
 
 ## P1 — Fiabilidad, red y detector

@@ -156,3 +156,10 @@ Falta enlazar el attestor con la conexión autenticada del juego, consultar y ha
 cumplir estos permisos desde Godot, renovar durante la partida y verificar caída,
 revocación y reconexión extremo a extremo. La [continuación](next-steps.md)
 describe los criterios de aceptación antes de habilitar el modo protegido.
+
+## Diseño de integración propuesto
+
+La [ADR 0010](adr/0010-attestor-peer-binding.md) propone el vínculo attestor–peer,
+protección de todo el tráfico ENet, IPC y lifecycle. Su [matriz de aceptación](development/ma-010-validation.md)
+distingue pruebas existentes de E2E pendientes. Es una propuesta MA-010: no
+modifica el contrato/runtime vigente ni habilita protegido en esta revisión.

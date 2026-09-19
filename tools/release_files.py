@@ -7,7 +7,8 @@ from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
 FILES = ('.gitignore','README.md','VERSION','THIRD_PARTY_NOTICES.md',
-         'CMakeLists.txt','game-client','game-server')
+         'CMakeLists.txt','game-client','game-server','AGENTS.md',
+         '.github/pull_request_template.md')
 FORMATS = {'game': {'.gd','.uid','.tscn','.cfg','.godot'},
            'tools': {'.py'}, 'scripts': {'.py'}, 'lab': {'.c','.h'},
            'tests': {'.py','.c','.md'}, 'cmake': {'.cmake'},

@@ -19,6 +19,7 @@ def main():
             ('launch-help',[str(ROOT/'game-client'),'--help'],10),
             ('launch-version',[str(ROOT/'game-server'),'--version'],10),
             ('godot-rules',[engine(),'--headless','--path',str(ROOT/'game'),'--script','tests/rules.gd'],20),
+            ('admission-boundary',[engine(),'--headless','--path',str(ROOT/'game'),'--script','tests/admission.gd'],15),
             ('tool-behavior',[sys.executable,'tools/test_game_tools.py'],30),
             ('fps-network',[sys.executable,'tools/verify_game.py'],60),
             ('documentation',[sys.executable,'scripts/verificar-documentacion.py'],10),

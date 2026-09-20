@@ -1,8 +1,28 @@
 # 0010 — Enlace autenticado entre attestor y peer del FPS
 
-Estado: **propuesta para revisión**, no habilita protegido. Paquete: [MA-010](../development/tasks/MA-010.md).
+Estado: **aceptada como base experimental de implementación**, no habilita protegido. Paquete: [MA-010](../development/tasks/MA-010.md).
 Base: `648ff3c06efbadd554cf199c05e16b0663c11af0` (origin/main actualizado,
 MA-000 integrado). Fecha: 2026-09-19. Runtime actual: sólo development.
+
+## Aceptación y revisión de cierre (2026-09-20)
+
+El titular acepta este diseño como base experimental, sujeto a sus gates.
+La entrega original `9c4f7872f3db9cf7c53368e8c115671920253f45` ya pertenece a
+origin/main; no se infiere una PR histórica. Se revisaron identidades, posesión,
+IPC, generaciones, estados terminales, plazos, renovación y rollover. La matriz
+T01–T28 y los presupuestos siguen pendientes de implementación/medición.
+
+TCP introduce bloqueo por pérdida y retransmisiones superpuestas con ENet.
+La suspensión cada 20 s puede interrumpir de forma notable la partida: el jugador
+queda vulnerable mientras verifica. La aceptación del diseño no acredita una
+experiencia de juego aceptable. MA-014 debe registrar duración p50/p95/máxima de
+cada suspensión, fracción de partida sin control, fallos de renovación y efecto
+con 2/8 peers, además de la ventana de revocación. Antes de abrir protegido debe
+revisarse explícitamente esa evidencia de jugabilidad; si no es aceptable, revisar
+el diseño en su paquete, sin omitir suspensión, ampliar permisos ni degradar a dev.
+La cota de 800 ms y el margen de 25 ms son presupuestos, no mediciones ni garantías
+de sincronización/deriva de reloj entre máquinas.
+
 
 ## 1. Problema, evidencia y decisión
 
@@ -278,7 +298,12 @@ la partida: suspender, invalidar generaciones, revoke del binding antiguo y
 esperar confirmación REVOKED auténtica; luego register del mismo peer/canal con
 nueva conn_generation. `_register` elimina entradas revocadas: no exige cambiar
 su formato. Service connection_id/admission_id nuevos, Quote nueva y barrera nueva.
-Si revoke/register falla, cerrar; no continuar con binding viejo ni dos registros.
+La confirmación de la revocación **solicitada por ese rollover**, correlacionada
+con su request_id/binding/generación, retira el binding antiguo y deja la ruta
+suspendida para register; no es un CLOSED de la conexión física. Cualquier
+revocación fuera de esa transición sigue siendo terminal. No se reabre el binding
+revocado. Si revoke/register falla, cerrar; no continuar con binding viejo ni dos
+registros.
 Límite local duro de 300 s menos margen: ningún status lo amplía. Rollover no
 reinicia vida/munición/puntuación ni reloj de partida; dura sólo mientras el canal
 físico sigue autenticado. Reconnect real exige otro canal y otra ruta.
@@ -385,8 +410,8 @@ la unión Godot–gateway–servicio ni el límite de 800 ms. Dividir así, una 
 | MA-015 | Aceptación entre dos Fedora/TPM físicos; Quote/IMA sólo según política realmente implementada. IMA remoto o EK no aparecen por tener este canal. |
 
 Antes de arrancar cada paquete revisar tamaño; subdividir si sus fronteras no
-caben en una revisión coherente. Las decisiones de esta ADR se aceptan al integrar
-su revisión; eso no equivale a aceptar una implementación protegida. No se ha
+caben en una revisión coherente. La aceptación de diseño consignada arriba no equivale a aceptar una implementación
+protegida; sus gates siguen pendientes. No se ha
 implementado ninguno de esos paquetes en MA-010.
 
 Rollback de MA-010: revertir su commit documental. En implementación futura,

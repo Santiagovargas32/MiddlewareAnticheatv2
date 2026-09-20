@@ -6,10 +6,10 @@ aceptada o sustituida; una ADR propuesta no autoriza habilitar protegido.
 
 | ADR | Estado | Paquete |
 | --- | --- | --- |
-| [0010 — Enlace attestor–peer](0010-attestor-peer-binding.md) | Propuesta para revisión; sin implementación protegida | [MA-010](../development/tasks/MA-010.md) |
+| [0010 — Enlace attestor–peer](0010-attestor-peer-binding.md) | Aceptada como base experimental; sin implementación protegida | [MA-010](../development/tasks/MA-010.md) |
 
-MA-000 estableció este registro. MA-010 propone túnel mTLS para todo ENet,
-correlación de peer real, IPC y lifecycle. La propuesta no habilita protegido.
+MA-000 estableció este registro. MA-010 define túnel mTLS para todo ENet,
+correlación de peer real, IPC y lifecycle. La aceptación del diseño no habilita protegido.
 Contratos públicos existentes: [red Godot](../game-network-protocol.md),
 [admisión](../session-admission.md), [UDP C / decisión 0002](../lab-udp-protocol.md)
 y [TPM](../tpm-attestation.md). Conservarlos; no copiar decisiones locales privadas.

@@ -1,5 +1,23 @@
 # Estado del proyecto
 
+## Cierre MA-010 en curso — 2026-09-20
+
+Base remota comprobada: `9c4f7872f3db9cf7c53368e8c115671920253f45`, contiene la
+entrega documental MA-010. [CI histórica de ese SHA](https://github.com/Santiagovargas32/MiddlewareAnticheatv2/actions/runs/35437664557)
+completed/success, consultada nuevamente. MA-010 documental DONE; ADR aceptada
+por el titular como base experimental. Se revisaron identidad/IPC/estados/plazos;
+se aclara el ACK de rollover y el coste de TCP/suspensión periódica sin afirmar
+E2E ni tiempos medidos. T01–T28 y MA-012–015 siguen pendientes.
+
+Rama de cierre: `docs/ma-010-review-closeout`. Su PR/CI/integración se comprobarán
+antes de iniciar MA-011 desde main actualizado. El encargo actual autoriza commits,
+push de ramas, PR y merge sujeto a controles GitHub para ambos objetivos; nunca
+push directo a main ni bypass. Las restricciones siguientes son del informe
+histórico conservado, no de esta ejecución. Rollback de cierre: revert documental
+mediante PR. No cambia runtime. Validación local: verificador documental.
+
+## Informe histórico de la entrega MA-010 (2026-09-19)
+
 Registro MA-010, 2026-09-19. Rama `docs/ma-010-admission-design`.
 Base: `648ff3c06efbadd554cf199c05e16b0663c11af0`, origin/main actualizado al inicio.
 Árbol inicial limpio. MA-000 integrado por ancestry (origin/main apunta a su commit);

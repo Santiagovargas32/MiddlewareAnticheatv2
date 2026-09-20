@@ -1,14 +1,15 @@
 #!/usr/bin/env python3
-"""Behavior tests for offline detector/label separation and metric handling."""
+"""Behavior tests for launchers, ENet errors and offline detector/label separation."""
 import contextlib
 import io
 import json
+import os
 from pathlib import Path
 import subprocess
 import sys
 import tempfile
 import unittest
-from run_game import ROOT, parse_args
+from run_game import ROOT, engine, parse_args
 
 
 class LauncherTests(unittest.TestCase):
@@ -23,6 +24,26 @@ class LauncherTests(unittest.TestCase):
         options = parse_args(['--join','192.168.1.50','--port','7777','--name','Alice'])
         self.assertEqual(options.join,'192.168.1.50')
         self.assertEqual(options.port,7777)
+
+
+class TransportTests(unittest.TestCase):
+    def test_occupied_port_reports_error_and_can_recover(self):
+        with tempfile.TemporaryDirectory(prefix='arena-port-') as tmp:
+            result = subprocess.run(
+                [engine(),'--headless','--path',str(ROOT/'game'),
+                 '--script','tests/admission.gd','--','--occupied-port'],
+                env=dict(os.environ,XDG_DATA_HOME=tmp,XDG_CONFIG_HOME=tmp,XDG_CACHE_HOME=tmp),
+                capture_output=True,text=True,timeout=10)
+        output = result.stdout+result.stderr
+        self.assertEqual(result.returncode,0,output)
+        # Assert the single expected native diagnostic; no broad error filtering.
+        self.assertEqual([line for line in output.splitlines() if 'ERROR:' in line],
+                         ["ERROR: Couldn't create an ENet host."],output)
+        self.assertNotIn('SCRIPT ERROR',output)
+        self.assertNotIn('were leaked',output)
+        report = next(json.loads(line) for line in result.stdout.splitlines()
+                      if line.startswith('{'))
+        self.assertEqual(report,dict(suite='occupied-port',checks=5,failures=0),output)
 
 
 class AnalysisTests(unittest.TestCase):

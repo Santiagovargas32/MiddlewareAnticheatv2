@@ -6,15 +6,16 @@ signal shot(shooter: int, victim: int)
 const Pawn = preload("res://scripts/pawn.gd")
 const Arena = preload("res://scripts/arena.gd")
 const Detector = preload("res://scripts/aim_detector.gd")
+const Admission = preload("res://scripts/admission_boundary.gd")
+const Transport = preload("res://scripts/enet_transport.gd")
 const VERSION = 1
+var admission = Admission.new()
+var transport: Transport
 var world: Node3D
 var pawns: Dictionary = {}
 var members: Dictionary = {}
 var inputs: Dictionary = {}
 var detectors: Dictionary = {}
-var last_sequence: Dictionary = {}
-var last_input_tick: Dictionary = {}
-var pending: Dictionary = {}
 var snapshots: Dictionary = {}
 var session = ""
 var phase = "DISCONNECTED"
@@ -40,6 +41,7 @@ var last_packet_at = 0
 var telemetry_elapsed = 0.0
 
 func _ready() -> void:
+	transport = Transport.new(multiplayer)
 	var args = OS.get_cmdline_user_args()
 	var path = "res://server.cfg"
 	var index = args.find("--config")
@@ -77,16 +79,14 @@ func host(port: int, dev: bool) -> Error:
 		notice.emit(config_error)
 		return ERR_INVALID_DATA
 	if port < 1024 or port > 65535: return ERR_INVALID_PARAMETER
-	if not dev:
-		notice.emit("PROTECTED_UNAVAILABLE: falta integrar el verifier con admisión de juego")
+	if Admission.profile_error(dev) != OK:
+		notice.emit(Admission.PROTECTED_NOTICE)
 		return ERR_UNAVAILABLE
 	stop("")
 	var random_session = Crypto.new().generate_random_bytes(16)
 	if random_session.size() != 16: return ERR_UNAVAILABLE
-	var peer = ENetMultiplayerPeer.new()
-	var error = peer.create_server(port,clampi(int(config.get_value("match","max_players",8)),2,8))
+	var error = transport.listen(port,clampi(int(config.get_value("match","max_players",8)),2,8))
 	if error != OK: return error
-	multiplayer.multiplayer_peer = peer
 	server_mode = true
 	development = dev
 	phase = "LOBBY"
@@ -99,28 +99,22 @@ func join_server(address: String, port: int, nickname: String) -> Error:
 	stop("")
 	player_name = nickname.strip_edges().substr(0,24)
 	if player_name.is_empty(): player_name = "Player"
-	var peer = ENetMultiplayerPeer.new()
-	var error = peer.create_client(address,port)
+	var error = transport.connect_to(address,port)
 	if error != OK: return error
-	multiplayer.multiplayer_peer = peer
 	phase = "CONNECTING"
 	last_packet_at = Time.get_ticks_msec()
 	changed.emit()
 	return OK
 
 func stop(message: String) -> void:
-	if multiplayer.multiplayer_peer:
-		multiplayer.multiplayer_peer.close()
-	multiplayer.multiplayer_peer = OfflineMultiplayerPeer.new()
+	transport.close()
 	for pawn in pawns.values(): pawn.queue_free()
 	pawns.clear()
 	members.clear()
 	inputs.clear()
 	detectors.clear()
-	pending.clear()
+	admission.clear()
 	snapshots.clear()
-	last_sequence.clear()
-	last_input_tick.clear()
 	server_mode = false
 	development = false
 	phase = "DISCONNECTED"
@@ -139,45 +133,41 @@ func stop(message: String) -> void:
 	changed.emit()
 
 func _peer_connected(id: int) -> void:
-	if server_mode: pending[id] = Time.get_ticks_msec()
+	if server_mode: admission.connected(id,Time.get_ticks_msec())
 
 func _peer_disconnected(id: int) -> void:
-	pending.erase(id)
+	admission.disconnected(id)
 	members.erase(id)
 	inputs.erase(id)
 	detectors.erase(id)
-	last_sequence.erase(id)
-	last_input_tick.erase(id)
 	if pawns.has(id):
 		pawns[id].queue_free()
 		pawns.erase(id)
 	if server_mode: publish()
 
 func _connected() -> void:
-	own_id = multiplayer.get_unique_id()
+	own_id = transport.unique_id()
 	phase = "CONNECTED"
 	hello.rpc_id(1,VERSION,player_name)
 
 @rpc("any_peer","call_remote","reliable",0)
 func hello(version: int, nickname: String) -> void:
 	if not server_mode: return
-	var id = multiplayer.get_remote_sender_id()
-	if not pending.has(id): return
-	if version != VERSION or nickname.length() < 1 or nickname.length() > 24 or not nickname.is_valid_identifier():
-		multiplayer.multiplayer_peer.disconnect_peer(id)
-		return
-	if phase == "IN_MATCH":
-		rejected.rpc_id(id,"Partida en curso; vuelve a conectar al terminar")
-		return
-	for member in members.values():
-		if member.name == nickname:
+	var id = transport.remote_sender_id()
+	match admission.hello(id,version,VERSION,nickname,development,phase,members):
+		Admission.Hello.DISCONNECT:
+			transport.disconnect_peer(id)
+			return
+		Admission.Hello.IN_MATCH:
+			rejected.rpc_id(id,"Partida en curso; vuelve a conectar al terminar")
+			return
+		Admission.Hello.DUPLICATE_NAME:
 			rejected.rpc_id(id,"Nombre ya utilizado")
 			return
-	if not development: return # Fail closed, no client-controlled attestation decision.
-	pending.erase(id)
+		Admission.Hello.ACCEPT: pass
+		_: return
 	members[id] = {"name":nickname,"attestation":"NOT_ATTESTED_DEV","ready":false,"ping":0,"score":0.0,"state":"NORMAL"}
 	detectors[id] = Detector.new()
-	last_sequence[id] = 0
 	welcome.rpc_id(id,session,development)
 	publish()
 
@@ -198,8 +188,8 @@ func ready_player() -> void:
 
 @rpc("any_peer","call_remote","reliable",0)
 func ready_request(value: String) -> void:
-	var id = multiplayer.get_remote_sender_id()
-	if not server_mode or value != session or not members.has(id) or phase not in ["LOBBY","RESULTS"]: return
+	var id = transport.remote_sender_id()
+	if not server_mode or not admission.permits(id,value,session) or not members.has(id) or phase not in ["LOBBY","RESULTS"]: return
 	members[id].ready = true
 	var all_ready = true
 	for member in members.values(): all_ready = all_ready and member.ready
@@ -249,18 +239,19 @@ func send_input(move: Vector2, yaw: float, pitch: float, jump: bool, fire: bool,
 
 @rpc("any_peer","call_remote","unreliable_ordered",1)
 func intent(value: String, seq: int, move: Vector2, yaw: float, pitch: float, jump: bool, fire: bool, reload: bool) -> void:
-	accept_intent(multiplayer.get_remote_sender_id(),value,seq,move,yaw,pitch,jump,fire,reload)
+	accept_intent(transport.remote_sender_id(),value,seq,move,yaw,pitch,jump,fire,reload)
 
 func accept_intent(id: int, value: String, seq: int, move: Vector2, yaw: float, pitch: float, jump: bool, fire: bool, reload: bool) -> void:
 	if not server_mode or phase != "IN_MATCH": return
-	if value != session or not pawns.has(id) or not members.has(id): return
-	if seq <= last_sequence.get(id,0) or seq > 2147483647: return
+	if not admission.permits(id,value,session) or not pawns.has(id) or not members.has(id): return
+	var context = admission.connection(id)
+	if seq <= context.last_sequence or seq > 2147483647: return
 	if not move.is_finite() or move.length_squared() > 1.001 or not is_finite(yaw) or not is_finite(pitch): return
 	if absf(yaw) > PI or absf(pitch) > 1.5: return
 	# At most one accepted input per server tick. A rejection consumes no sequence.
-	if last_input_tick.get(id,-1) == tick: return
-	last_sequence[id] = seq
-	last_input_tick[id] = tick
+	if context.last_input_tick == tick: return
+	context.last_sequence = seq
+	context.last_input_tick = tick
 	inputs[id] = {"move":move,"yaw":yaw,"pitch":pitch,"jump":jump,"fire":fire,"reload":reload,"at":tick}
 
 func _physics_process(delta: float) -> void:
@@ -270,10 +261,9 @@ func _physics_process(delta: float) -> void:
 		return
 	var started = Time.get_ticks_usec()
 	tick += 1
-	for id in pending.keys():
-		if Time.get_ticks_msec()-pending[id] > 5000:
-			multiplayer.multiplayer_peer.disconnect_peer(id)
-			pending.erase(id)
+	for id in admission.expired_handshakes(Time.get_ticks_msec()):
+		transport.disconnect_peer(id)
+		admission.disconnected(id)
 	if phase == "IN_MATCH":
 		match_left = maxf(0,match_left-delta)
 		for id in pawns:
@@ -406,7 +396,8 @@ func snapshot(value: String, state: String, roster: Dictionary, values: Dictiona
 
 @rpc("any_peer","call_remote","unreliable",3)
 func ping_request(stamp: int) -> void:
-	if server_mode and members.has(multiplayer.get_remote_sender_id()): pong.rpc_id(multiplayer.get_remote_sender_id(),stamp)
+	var id = transport.remote_sender_id()
+	if server_mode and admission.admitted(id) and members.has(id): pong.rpc_id(id,stamp)
 
 @rpc("authority","call_remote","unreliable",3)
 func pong(stamp: int) -> void:
@@ -421,5 +412,6 @@ func shot_event(shooter: int, victim: int) -> void:
 	shot.emit(shooter,victim)
 
 func _exit_tree() -> void:
-	if multiplayer.multiplayer_peer: multiplayer.multiplayer_peer.close()
+	if transport: transport.close()
+	admission.clear()
 	if log_file: log_file.close()

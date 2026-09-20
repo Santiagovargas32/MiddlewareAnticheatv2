@@ -1,6 +1,22 @@
 # Estado del proyecto
 
-## Cierre MA-010 en curso — 2026-09-20
+## MA-011 en revisión — 2026-09-20
+
+Rama `refactor/ma-011-admission-boundary`, base
+`54c80f4a44147a380eff02335a7193851a0d2d3a` desde origin/main actualizado.
+[Ficha MA-011](tasks/MA-011.md) definida antes del runtime. Extrae transporte ENet,
+admisión development y contexto por conexión; conserva RPC y lógica de partida.
+IN_REVIEW: verify_release PASS 7/7, reglas 29, frontera 59 checks más cinco de
+puerto ocupado, FPS gráfico seis escenarios con captura inspeccionada. Build
+Release -Werror LAB_TPM=ON y session_admission PASS (software). Paquete de 144
+fuentes/hashes extraído limpio con verify_release PASS. Diez RPC idénticas,
+diff revisado y documentación PASS. [Ficha](tasks/MA-011.md#evidencia-y-revisión--2026-09-20)
+detalla oráculos, artefactos y límites. CI/clone/merge por comprobar después del
+commit; no se declara DONE. No hay bloqueo local. Rollback por revert de la
+refactorización mediante PR. No se habilita protegido ni se implementa MA-012;
+es el siguiente candidato, con túnel/IPC/identidad y sus E2E aún pendientes.
+
+## MA-010 cerrado — 2026-09-20
 
 Base remota comprobada: `9c4f7872f3db9cf7c53368e8c115671920253f45`, contiene la
 entrega documental MA-010. [CI histórica de ese SHA](https://github.com/Santiagovargas32/MiddlewareAnticheatv2/actions/runs/35437664557)
@@ -9,8 +25,12 @@ por el titular como base experimental. Se revisaron identidad/IPC/estados/plazos
 se aclara el ACK de rollover y el coste de TCP/suspensión periódica sin afirmar
 E2E ni tiempos medidos. T01–T28 y MA-012–015 siguen pendientes.
 
-Rama de cierre: `docs/ma-010-review-closeout`. Su PR/CI/integración se comprobarán
-antes de iniciar MA-011 desde main actualizado. El encargo actual autoriza commits,
+Rama de cierre: `docs/ma-010-review-closeout`, commit `5c4c4e2`,
+[PR #2](https://github.com/Santiagovargas32/MiddlewareAnticheatv2/pull/2) integrada
+como `54c80f4a44147a380eff02335a7193851a0d2d3a`; ancestry comprobado tras fetch.
+[CI del HEAD](https://github.com/Santiagovargas32/MiddlewareAnticheatv2/actions/runs/35518541872)
+y [postmerge](https://github.com/Santiagovargas32/MiddlewareAnticheatv2/actions/runs/35518644075)
+completed/success. El encargo actual autoriza commits,
 push de ramas, PR y merge sujeto a controles GitHub para ambos objetivos; nunca
 push directo a main ni bypass. Las restricciones siguientes son del informe
 histórico conservado, no de esta ejecución. Rollback de cierre: revert documental

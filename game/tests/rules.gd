@@ -89,6 +89,8 @@ func run() -> void:
 	net.phase = "IN_MATCH"
 	net.session = "test-session"
 	net.members[2] = {"name":"Test"}
+	net.admission.connected(2,0)
+	net.admission.hello(2,1,1,"Test",true,"LOBBY",{})
 	net.pawns[2] = pawn
 	net.set_physics_process(false)
 	net.accept_intent(2,"wrong",1,Vector2.ZERO,0,0,false,false,false)
@@ -102,14 +104,14 @@ func run() -> void:
 	net.accept_intent(2,"test-session",1,Vector2.ZERO,0,2,false,false,false)
 	check(not net.inputs.has(2),"pitch bounds rejected")
 	net.accept_intent(2,"test-session",1,Vector2.ZERO,0,0,false,false,false)
-	check(net.last_sequence[2] == 1,"valid intent accepted after rejections")
+	check(net.admission.connection(2).last_sequence == 1,"valid intent accepted after rejections")
 	net.accept_intent(2,"test-session",2,Vector2(1,0),0,0,false,false,false)
-	check(net.last_sequence[2] == 1,"same tick burst does not consume sequence")
+	check(net.admission.connection(2).last_sequence == 1,"same tick burst does not consume sequence")
 	net.tick += 1
 	net.accept_intent(2,"test-session",1,Vector2(1,0),0,0,false,false,false)
 	check(net.inputs[2].move == Vector2.ZERO,"replay rejected")
 	net.accept_intent(2,"test-session",2,Vector2(1,0),0,0,false,false,false)
-	check(net.last_sequence[2] == 2,"next tick accepts unconsumed sequence")
+	check(net.admission.connection(2).last_sequence == 2,"next tick accepts unconsumed sequence")
 	net.pawns.clear()
 	net.queue_free()
 	print(JSON.stringify({"suite":"arena-rules","checks":checks,"failures":failures,"scope":"physics and synthetic detector fixtures, not human FP measurements"}))

@@ -67,9 +67,34 @@ servidor observado. No se envía al servidor. El análisis compara etiquetas des
 de ejecutar el detector y excluye transiciones por incertidumbre de red. Un peer
 ID es seudónimo de sesión, no identidad permanente.
 
-## Diseño de integración propuesto
+## Frontera interna de admisión (MA-011)
+
+Las RPC mantienen nodo, firmas y canales. [network.gd](../game/scripts/network.gd)
+orquesta partida, roster y efectos. [enet_transport.gd](../game/scripts/enet_transport.gd)
+encapsula apertura/cierre ENet e identidad obtenida de MultiplayerAPI;
+[admission_boundary.gd](../game/scripts/admission_boundary.gd) conserva la política
+development y el orden de validación de hello, sin aceptar credenciales de cliente.
+[connection_context.gd](../game/scripts/connection_context.gd) pertenece a una
+conexión del servidor: PENDING → ADMITTED → CLOSED, timestamp de handshake,
+generación local y secuencias de intención. No es un binding autenticado.
+
+Desconexión/stop retiran el contexto y permiso. Reutilizar peer_id crea un contexto
+nuevo; referencias antiguas quedan CLOSED. El timeout conserva el límite estricto
+>5000 ms, comprobado al procesar el tick. La sesión de lobby, partida/revancha y
+detector conservan su semántica anterior: fin de partida limpia ready/intenciones,
+pero no reinicia contexto, secuencia ni detector. No se añaden IDs de partida/ronda
+al protocolo /1; su aislamiento protegido requiere el contrato futuro de la ADR.
+
+Pruebas: [frontera y transporte](../game/tests/admission.gd),
+[reglas](../game/tests/rules.gd) y procesos de [FPS loopback](../tools/verify_game.py),
+integrados en `python3 tools/verify_release.py`. El caso de puerto ocupado se
+ejecuta aisladamente desde [test_game_tools.py](../tools/test_game_tools.py) y exige
+el diagnóstico nativo exacto, retorno ERR_CANT_CREATE y recuperación posterior.
+
+## Diseño de integración aceptado
 
 La [ADR 0010](adr/0010-attestor-peer-binding.md) propone el vínculo attestor–peer,
 protección de todo el tráfico ENet, IPC y lifecycle. Su [matriz de aceptación](development/ma-010-validation.md)
-distingue pruebas existentes de E2E pendientes. Es una propuesta MA-010: no
-modifica el contrato/runtime vigente ni habilita protegido en esta revisión.
+distingue pruebas existentes de E2E pendientes. MA-010 está aceptada como base
+experimental. MA-011 sólo extrae la frontera development: no implementa túnel,
+IPC, permisos protegidos ni renovación y no satisface los E2E T01–T28.

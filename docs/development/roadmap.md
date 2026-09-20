@@ -7,8 +7,9 @@ y MA-010 concreta admisión en la [ADR 0010](../adr/0010-attestor-peer-binding.m
 [Estado y evidencia](project-state.md). P0 bloquea el hito protegido, no implica
 vulnerabilidad explotable. S/M/L es complejidad relativa, no duración.
 
-Único paquete activo: [MA-010](tasks/MA-010.md), IN_REVIEW. Siguiente: MA-011 tras
-integrar MA-010 y recibir su encargo; no se implementó aquí. Los siguientes quedan
+MA-010 documental está DONE: `9c4f787` integrado, con aceptación experimental del
+titular. Cierre de revisión en `docs/ma-010-review-closeout`; MA-011 ya está encargado
+y empieza desde main tras integrar ese cierre. Los siguientes quedan
 BACKLOG. READY exige dependencias integradas y ficha según el [workflow](workflow.md).
 Los IDs representan paquetes/rama/PR previstos, no issues ya creadas.
 
@@ -17,7 +18,7 @@ Los IDs representan paquetes/rama/PR previstos, no issues ya creadas.
 | ID / rama | Dependencias | Aceptación principal | Tamaño / estado |
 | --- | --- | --- | --- |
 | MA-000 · `docs/ma-000-development-workflow` | Ninguna | Instrucciones públicas, workflow, roadmap, estado, plantillas y guías presentes en clone/paquete limpios; privados excluidos | M / DONE |
-| MA-010 · `docs/ma-010-admission-design` | MA-000 | ADR de identidad/posesión, transporte/IPC, estados, renovación, presupuesto de revocación y pruebas negativas | M / IN_REVIEW |
+| MA-010 · `docs/ma-010-admission-design` | MA-000 | ADR de identidad/posesión, transporte/IPC, estados, renovación, presupuesto de revocación y pruebas negativas | M / DONE |
 | MA-011 · `refactor/ma-011-admission-boundary` | MA-010 | Extraer frontera de permiso/transporte y contexto; development equivalente, protegido rechazado (ADR 0010) | M / BACKLOG |
 | MA-012 · `feat/ma-012-authenticated-peer-binding` | MA-011 | Túnel mTLS completo, IPC y binding con endpoint real; certificado ajeno, replay, reconexión y recursos; protegido cerrado | L / BACKLOG |
 | MA-013 · `feat/ma-013-admission-enforcement` | MA-012 | Barrera inicial, RPC protegido, guard/epoch para ready/spawn/intenciones y limpieza; fallo cerrado; sin apertura pública aún | L / BACKLOG |

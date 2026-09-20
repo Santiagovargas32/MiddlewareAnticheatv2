@@ -1,20 +1,30 @@
 # Estado del proyecto
 
-## MA-011 en revisión — 2026-09-20
+## MA-011 integrado — 2026-09-20
 
 Rama `refactor/ma-011-admission-boundary`, base
 `54c80f4a44147a380eff02335a7193851a0d2d3a` desde origin/main actualizado.
 [Ficha MA-011](tasks/MA-011.md) definida antes del runtime. Extrae transporte ENet,
 admisión development y contexto por conexión; conserva RPC y lógica de partida.
-IN_REVIEW: verify_release PASS 7/7, reglas 29, frontera 59 checks más cinco de
+DONE después de comprobar integración por [PR #3](https://github.com/Santiagovargas32/MiddlewareAnticheatv2/pull/3).
+Commit `61cbe7baae96dcb1099033b96bbb962d38f1a96b`, merge
+`1f86af947c3a4aeedbb864232c53efa01d518027`, ancestry PASS en origin/main.
+verify_release PASS 7/7, reglas 29, frontera 59 checks más cinco de
 puerto ocupado, FPS gráfico seis escenarios con captura inspeccionada. Build
 Release -Werror LAB_TPM=ON y session_admission PASS (software). Paquete de 144
 fuentes/hashes extraído limpio con verify_release PASS. Diez RPC idénticas,
 diff revisado y documentación PASS. [Ficha](tasks/MA-011.md#evidencia-y-revisión--2026-09-20)
-detalla oráculos, artefactos y límites. CI/clone/merge por comprobar después del
-commit; no se declara DONE. No hay bloqueo local. Rollback por revert de la
+detalla oráculos, artefactos y límites. Clone limpio del commit PASS y
+[CI del HEAD](https://github.com/Santiagovargas32/MiddlewareAnticheatv2/actions/runs/35519199011)
+completed/success, incluidos los gates C/TPM software, integración y sanitizers.
+[CI postmerge](https://github.com/Santiagovargas32/MiddlewareAnticheatv2/actions/runs/35519343254)
+completed/success. No hay bloqueos de MA-011 pendientes.
+Rollback por revert de la
 refactorización mediante PR. No se habilita protegido ni se implementa MA-012;
-es el siguiente candidato, con túnel/IPC/identidad y sus E2E aún pendientes.
+es el siguiente candidato [READY](tasks/MA-012.md), con dependencias y criterios
+documentados, sin iniciar. Túnel/IPC/identidad y sus E2E siguen pendientes.
+Cierre de estado en `docs/ma-011-review-closeout`, sólo documentación desde el
+merge comprobado, mediante PR autorizada. El informe histórico se conserva debajo.
 
 ## MA-010 cerrado — 2026-09-20
 

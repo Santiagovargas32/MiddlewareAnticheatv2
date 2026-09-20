@@ -43,9 +43,10 @@ precision/recall si no hay etiquetas comparables. Cuantificar también coste CPU
 bytes/s y latencia de detección; actualmente tick/detector µs y RTT son mediciones
 operativas iniciales, no un benchmark representativo.
 
-## Diseño de integración propuesto
+## Diseño de integración aceptado, pendiente de implementar
 
 La [ADR 0010](adr/0010-attestor-peer-binding.md) propone el vínculo attestor–peer,
 protección de todo el tráfico ENet, IPC y lifecycle. Su [matriz de aceptación](development/ma-010-validation.md)
-distingue pruebas existentes de E2E pendientes. Es una propuesta MA-010: no
-modifica el contrato/runtime vigente ni habilita protegido en esta revisión.
+distingue pruebas existentes de E2E pendientes. MA-010 está aceptada como base
+experimental. MA-011 extrajo la frontera development; no autentica al attestor ni
+implementa el túnel/IPC o los permisos protegidos. Protegido permanece cerrado.

@@ -320,3 +320,7 @@ Las pruebas locales de varios procesos y las ventanas reales no sustituyen esa
 
 **Sin licencia de reutilización por ahora**, por decisión del titular.
 [Licencias y avisos de terceros](THIRD_PARTY_NOTICES.md).
+
+La frontera experimental [MA-012](docs/gateway-transport.md) se prueba sólo mediante
+un harness interno Godot/mTLS. No habilita el perfil protegido público ni integra
+aún la admisión al FPS. [Evidencia y límites](docs/development/ma-012-validation.md).

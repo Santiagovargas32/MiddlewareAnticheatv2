@@ -157,11 +157,13 @@ cumplir estos permisos desde Godot, renovar durante la partida y verificar caíd
 revocación y reconexión extremo a extremo. La [continuación](next-steps.md)
 describe los criterios de aceptación antes de habilitar el modo protegido.
 
-## Diseño de integración aceptado, pendiente de implementar
+## Diseño de integración y transporte interno
 
-La [ADR 0010](adr/0010-attestor-peer-binding.md) propone el vínculo attestor–peer,
-protección de todo el tráfico ENet, IPC y lifecycle. Su [matriz de aceptación](development/ma-010-validation.md)
-distingue pruebas existentes de E2E pendientes. MA-010 está aceptada como base
-experimental. MA-011 extrajo la frontera development; no modifica arena-admission/1
-ni lo enlaza todavía al peer Godot. Túnel/IPC, enforcement y lifecycle siguen
-pendientes y protegido permanece cerrado.
+La [ADR 0010](adr/0010-attestor-peer-binding.md) está aceptada como base experimental.
+MA-011 conserva la frontera development. [MA-012](gateway-transport.md) añade un
+harness interno con todo ENet sobre mTLS, IPC heredado y asociación del certificado
+con el endpoint real; no conecta arena-admission/1 ni concede permiso de juego.
+El FPS público conserva su protocolo y rechazo de protegido. La
+[evidencia MA-012](development/ma-012-validation.md) detalla negativos/límites;
+la [matriz completa](development/ma-010-validation.md) sigue pendiente para
+MA-013/014 en barrera, guard/epochs, renovación, rollover y revocación medida.

@@ -91,10 +91,13 @@ integrados en `python3 tools/verify_release.py`. El caso de puerto ocupado se
 ejecuta aisladamente desde [test_game_tools.py](../tools/test_game_tools.py) y exige
 el diagnóstico nativo exacto, retorno ERR_CANT_CREATE y recuperación posterior.
 
-## Diseño de integración aceptado
+## Diseño de integración y transporte interno
 
-La [ADR 0010](adr/0010-attestor-peer-binding.md) propone el vínculo attestor–peer,
-protección de todo el tráfico ENet, IPC y lifecycle. Su [matriz de aceptación](development/ma-010-validation.md)
-distingue pruebas existentes de E2E pendientes. MA-010 está aceptada como base
-experimental. MA-011 sólo extrae la frontera development: no implementa túnel,
-IPC, permisos protegidos ni renovación y no satisface los E2E T01–T28.
+La [ADR 0010](adr/0010-attestor-peer-binding.md) está aceptada como base experimental.
+MA-011 conserva la frontera development. [MA-012](gateway-transport.md) añade un
+harness interno con todo ENet sobre mTLS, IPC heredado y asociación del certificado
+con el endpoint real; no conecta arena-admission/1 ni concede permiso de juego.
+El FPS público conserva su protocolo y rechazo de protegido. La
+[evidencia MA-012](development/ma-012-validation.md) detalla negativos/límites;
+la [matriz completa](development/ma-010-validation.md) sigue pendiente para
+MA-013/014 en barrera, guard/epochs, renovación, rollover y revocación medida.

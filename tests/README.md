@@ -50,3 +50,12 @@ loopback y plazos. Comprueba estado, aislamiento, cierre, controles privados,
 reinicio con instancia nueva, cuota de entradas, timeout y muerte del trabajador.
 El CTest `game_network` requiere `openssl` CLI y permiso para escuchar en loopback.
 No interpreta un bloqueo del entorno como aprobación.
+
+## Transporte interno MA-012
+
+`python3 tests/gateway_tests.py` prueba codecs, límites, TLS y procesos con
+certificados temporales. `python3 tools/verify_gateway.py` ejecuta Godot servidor,
+dos clientes y auxiliares reales sobre loopback, reconexión y fallos de IPC/hijo.
+`game/tests/gateway_rules.gd` prueba rutas y parser Godot. Los tres gates están en
+verify_release; no requieren TPM. [Contrato](../docs/gateway-transport.md) y
+[evidencia](../docs/development/ma-012-validation.md); no otorgan permiso protegido.

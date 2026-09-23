@@ -1,6 +1,30 @@
 # Estado del proyecto
 
-## MA-011 integrado — 2026-09-20
+## MA-012 revisable localmente — 2026-09-23
+
+IN_REVIEW en `feat/ma-012-authenticated-peer-binding`, desde origin/main
+`a9baba8808f655b6cba2061a2071902c74edce20`; fetch al retomar confirma la misma base.
+MA-010/011 integrados. [Ficha](tasks/MA-012.md) y
+[evidencia](ma-012-validation.md): túnel mTLS de todo ENet, IPC heredado acotado,
+asociación de certificado/endpoint real y contexto sin permiso. Dos identidades,
+reconexión, rechazo directo, muerte del auxiliar y limpieza comprobados en harness.
+Protegido público permanece cerrado; arena-admission/1 y gameplay no cambian.
+
+verify_release PASS 10/10, Godot rutas/IPC 49 checks, Python 15 grupos, harness real
+12 escenarios. FPS gráfico PASS 6 escenarios con captura inspeccionada; admisión
+14 casos y CTest session_admission 1/1 software. La evidencia enlazada identifica
+extracción/clone y revisión, sin atribuir CI histórica al diff. Commit local y
+texto de PR preparados; publicación/merge de MA-012 no autorizados por la excepción
+anterior, que se limitaba a MA-010/011. No hay URL de PR nueva ni integración.
+
+Pendiente: revisión/publicación/integración autorizada; después [MA-013](tasks/MA-013.md)
+para barrera y enforcement, [MA-014](tasks/MA-014.md) para lifecycle/medición,
+[MA-015](tasks/MA-015.md) para LAN/TPM físicos. Sólo se han escrito sus fichas.
+TCP introduce retención y quedan pendientes revocación ≤800 ms y aceptación de
+pausas; no son resultados MA-012. Rollback por revert mediante PR manteniendo
+protegido cerrado. Los informes siguientes conservan el alcance de sus sesiones.
+
+## Histórico: MA-011 integrado — 2026-09-20
 
 Rama `refactor/ma-011-admission-boundary`, base
 `54c80f4a44147a380eff02335a7193851a0d2d3a` desde origin/main actualizado.

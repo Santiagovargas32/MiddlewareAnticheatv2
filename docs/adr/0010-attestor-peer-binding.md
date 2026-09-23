@@ -4,6 +4,18 @@ Estado: **aceptada como base experimental de implementación**, no habilita prot
 Base: `648ff3c06efbadd554cf199c05e16b0663c11af0` (origin/main actualizado,
 MA-000 integrado). Fecha: 2026-09-19. Runtime actual: sólo development.
 
+## Subconjunto implementado en MA-012 (2026-09-23)
+
+El [contrato de transporte interno](../gateway-transport.md) concreta túnel, IPC,
+asociación del endpoint ENet y límites del harness sin conceder permiso. Su
+[evidencia](../development/ma-012-validation.md) separa pruebas reproducidas de
+aceptación protegida pendiente. Usa enteros IPC hasta 2³¹−1 y reserva hasta 256
+rutas totales (activas + retiradas), una cota más conservadora que la propuesta.
+El cliente aprende la sesión en OPEN autenticado. MA-013/014 deben añadir binding
+de admisión, guard y lifecycle; el FPS público sigue rechazando protegido.
+Las secciones siguientes conservan el diseño completo, no describen todo como
+runtime existente ni convierten sus presupuestos en mediciones.
+
 ## Aceptación y revisión de cierre (2026-09-20)
 
 El titular acepta este diseño como base experimental, sujeto a sus gates.

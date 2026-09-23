@@ -10,8 +10,9 @@ vulnerabilidad explotable. S/M/L es complejidad relativa, no duración.
 MA-010 documental está DONE: `9c4f787` integrado, con aceptación experimental del
 titular y cierre integrado por PR #2 (`54c80f4`). [MA-011](tasks/MA-011.md) está
 DONE por PR #3 (`1f86af9`), integración comprobada. [MA-012](tasks/MA-012.md) es el
-siguiente candidato READY con dependencias/ficha, sin iniciar y sin autorización
-de implementación en este encargo. Los posteriores quedan BACKLOG.
+paquete IN_REVIEW de este encargo, transporte interno sin permiso protegido.
+Siguiente candidato: [MA-013](tasks/MA-013.md), BACKLOG hasta integrar MA-012
+y recibir encargo. MA-014/015 tienen fichas de continuidad, sin implementación.
 READY exige dependencias integradas y ficha según el [workflow](workflow.md).
 Los IDs representan paquetes/rama/PR previstos, no issues ya creadas.
 
@@ -22,10 +23,10 @@ Los IDs representan paquetes/rama/PR previstos, no issues ya creadas.
 | MA-000 · `docs/ma-000-development-workflow` | Ninguna | Instrucciones públicas, workflow, roadmap, estado, plantillas y guías presentes en clone/paquete limpios; privados excluidos | M / DONE |
 | MA-010 · `docs/ma-010-admission-design` | MA-000 | ADR de identidad/posesión, transporte/IPC, estados, renovación, presupuesto de revocación y pruebas negativas | M / DONE |
 | [MA-011](tasks/MA-011.md) · `refactor/ma-011-admission-boundary` | MA-010 | Extraer frontera de permiso/transporte y contexto; development equivalente, protegido rechazado (ADR 0010) | M / DONE |
-| [MA-012](tasks/MA-012.md) · `feat/ma-012-authenticated-peer-binding` | MA-010/011 integrados | Túnel mTLS completo, IPC y binding con endpoint real; certificado ajeno, replay, reconexión y recursos; protegido cerrado | L / READY, sin iniciar |
-| MA-013 · `feat/ma-013-admission-enforcement` | MA-012 | Barrera inicial, RPC protegido, guard/epoch para ready/spawn/intenciones y limpieza; fallo cerrado; sin apertura pública aún | L / BACKLOG |
-| MA-014 · `feat/ma-014-trust-lifecycle` | MA-013 | Renovación/suspensión/revocación, restart/timeout/instancia, límite absoluto; respuestas tardías descartadas y ventana medida; protegido sólo tras E2E | L / BACKLOG |
-| MA-015 · `test/ma-015-fedora-lan-attestation` | MA-014 | Dos Fedora físicos, identidad configurada, Quote/IMA según política y revocación en partida; aceptación física BLOCKED si falta hardware | M / BACKLOG |
+| [MA-012](tasks/MA-012.md) · `feat/ma-012-authenticated-peer-binding` | MA-010/011 integrados | Túnel mTLS completo, IPC y binding con endpoint real; certificado ajeno, replay, reconexión y recursos; protegido cerrado | L / IN_REVIEW |
+| [MA-013](tasks/MA-013.md) · `feat/ma-013-admission-enforcement` | MA-012 | Barrera inicial, RPC protegido, guard/epoch para ready/spawn/intenciones y limpieza; fallo cerrado; sin apertura pública aún | L / BACKLOG |
+| [MA-014](tasks/MA-014.md) · `feat/ma-014-trust-lifecycle` | MA-013 | Renovación/suspensión/revocación, restart/timeout/instancia, límite absoluto; respuestas tardías descartadas y ventana medida; protegido sólo tras E2E | L / BACKLOG |
+| [MA-015](tasks/MA-015.md) · `test/ma-015-fedora-lan-attestation` | MA-014 | Dos Fedora físicos, identidad configurada, Quote/IMA según política y revocación en partida; aceptación física BLOCKED si falta hardware | M / BACKLOG |
 
 H1: protegido experimental con contrato comprobado en software; aceptación física
 separada. El registro mTLS de admisión ya existe: no rehacer PR #1. En la base,

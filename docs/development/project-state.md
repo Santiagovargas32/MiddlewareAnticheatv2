@@ -12,8 +12,9 @@ Protegido público permanece cerrado; arena-admission/1 y gameplay no cambian.
 
 verify_release PASS 10/10, Godot rutas/IPC 49 checks, Python 15 grupos, harness real
 12 escenarios. FPS gráfico PASS 6 escenarios con captura inspeccionada; admisión
-14 casos y CTest session_admission 1/1 software. La evidencia enlazada identifica
-extracción/clone y revisión, sin atribuir CI histórica al diff. Commit local y
+14 casos y CTest session_admission 1/1 software. Extracción limpia PASS 158 fuentes/hashes y 10/10 gates; clone de
+`0afaf28f62ffe749633c0abb7a90adc433da6a59` PASS 10/10. La evidencia enlazada
+detalla revisión/límites, sin atribuir CI histórica al diff. Commit local y
 texto de PR preparados; publicación/merge de MA-012 no autorizados por la excepción
 anterior, que se limitaba a MA-010/011. No hay URL de PR nueva ni integración.
 

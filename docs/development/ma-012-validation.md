@@ -58,7 +58,7 @@ ficha. Sin cambios C ni contratos C; no se repiten sanitizers C por este diff.
 
 | Comando / comprobación | Resultado real |
 | --- | --- |
-| python3 scripts/verificar-documentacion.py | PASS, inventario/enlaces; repetir tras las notas de cierre |
+| python3 scripts/verificar-documentacion.py | PASS, 158 fuentes públicas y enlaces locales, incluidas las notas de cierre |
 | python3 tools/verify_release.py | PASS 10/10, conserva los siete gates y añade tres de gateway |
 | game/tests/gateway_rules.gd (en verify_release) | PASS 49 checks |
 | python3 tests/gateway_tests.py (en verify_release) | PASS 15 grupos, fixtures TLS/software |
@@ -81,7 +81,14 @@ RTT del harness de la extracción (no juego ni garantía de latencia):
 Los gates completos desde extracción incluyen la profundidad de contenedores
 vacíos y el límite de bytes procesados corregidos al revisar. Las notas de cierre
 posteriores sólo cambian documentación; se vuelve a comprobar inventario/enlaces.
-Clone del commit: pendiente de la comprobación posterior al primer commit local.
+Clone local limpio de `0afaf28f62ffe749633c0abb7a90adc433da6a59`: PASS 10/10.
+Incluye AGENTS, workflow, fichas, plantilla y fuentes, sin privados ni results
+previos. Comprueba también el último refuerzo del harness: cada eco conserva
+canal y modo, y se observan los cuatro canales y tres modos de entrega. Ese
+refuerzo se validó tras la extracción inicial y nuevamente en este clone.
+El cierre posterior sólo actualiza esta evidencia documental; no cambia runtime.
+Paquete final de revisión con notas de cierre: hashes verificados y código
+idéntico al clone probado; documentación verificada desde la extracción final.
 
 El primer intento al retomar no pudo crear sockets en el sandbox; se reprodujo
 fuera de esa restricción mediante aprobación del entorno y pasó. No se quitaron
